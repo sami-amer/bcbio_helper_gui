@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>822</width>
-    <height>612</height>
+    <width>945</width>
+    <height>610</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -19,26 +19,29 @@
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
-     <layout class="QGridLayout" name="gridLayout_3" rowstretch="75,0" columnstretch="0,0" rowminimumheight="0,0" columnminimumwidth="0,0">
+     <layout class="QGridLayout" name="mainLayout_grid" rowstretch="75,0" columnstretch="0,0" rowminimumheight="0,0" columnminimumwidth="0,0">
       <property name="leftMargin">
-       <number>10</number>
+       <number>5</number>
       </property>
       <property name="topMargin">
        <number>0</number>
       </property>
       <property name="rightMargin">
-       <number>10</number>
+       <number>6</number>
       </property>
       <property name="horizontalSpacing">
-       <number>0</number>
+       <number>14</number>
       </property>
       <property name="verticalSpacing">
-       <number>59</number>
+       <number>7</number>
       </property>
       <item row="1" column="0" colspan="2">
-       <layout class="QHBoxLayout" name="horizontalLayout_7">
+       <layout class="QHBoxLayout" name="bottomLayout_Hbox">
         <property name="spacing">
          <number>24</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SetMinAndMaxSize</enum>
         </property>
         <property name="leftMargin">
          <number>5</number>
@@ -47,10 +50,23 @@
          <number>5</number>
         </property>
         <item>
-         <widget class="QTextBrowser" name="textBrowser"/>
+         <widget class="QTextBrowser" name="consoleOutput_textbrowser">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>2160</width>
+            <height>1400</height>
+           </size>
+          </property>
+         </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton_5">
+         <widget class="QPushButton" name="runButton_button">
           <property name="text">
            <string>Run BCBIO</string>
           </property>
@@ -59,9 +75,12 @@
        </layout>
       </item>
       <item row="0" column="1">
-       <layout class="QVBoxLayout" name="verticalLayout">
+       <layout class="QVBoxLayout" name="pathsLayout_Vbox">
         <property name="spacing">
          <number>5</number>
+        </property>
+        <property name="sizeConstraint">
+         <enum>QLayout::SetMinimumSize</enum>
         </property>
         <property name="leftMargin">
          <number>3</number>
@@ -70,19 +89,19 @@
          <number>3</number>
         </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
+         <layout class="QHBoxLayout" name="dataPath_Hbox">
           <item>
-           <widget class="QLabel" name="label">
+           <widget class="QLabel" name="data_label">
             <property name="text">
              <string>Data</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit"/>
+           <widget class="QLineEdit" name="data_lineedit"/>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton">
+           <widget class="QPushButton" name="dataBrowse_button">
             <property name="text">
              <string>Browse</string>
             </property>
@@ -91,19 +110,19 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_5">
+         <layout class="QHBoxLayout" name="gtfPath_Hbox">
           <item>
-           <widget class="QLabel" name="label_2">
+           <widget class="QLabel" name="gtf_label">
             <property name="text">
              <string>GTF</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_2"/>
+           <widget class="QLineEdit" name="gtf_lineedit"/>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_2">
+           <widget class="QPushButton" name="gtfBrowse_button">
             <property name="text">
              <string>Browse</string>
             </property>
@@ -112,19 +131,19 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout">
+         <layout class="QHBoxLayout" name="fastaPath_Hbox">
           <item>
-           <widget class="QLabel" name="label_3">
+           <widget class="QLabel" name="fasta_label">
             <property name="text">
              <string>FASTA</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_3"/>
+           <widget class="QLineEdit" name="fasta_lineedit"/>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_3">
+           <widget class="QPushButton" name="fastaBrowse_button">
             <property name="text">
              <string>Browse</string>
             </property>
@@ -133,19 +152,19 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <layout class="QHBoxLayout" name="outPath_Hbox">
           <item>
-           <widget class="QLabel" name="label_4">
+           <widget class="QLabel" name="out_label">
             <property name="text">
              <string>Output Path</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_4"/>
+           <widget class="QLineEdit" name="out_lineedit"/>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButton_4">
+           <widget class="QPushButton" name="outBrowse_button">
             <property name="text">
              <string>Browse</string>
             </property>
@@ -156,100 +175,100 @@
        </layout>
       </item>
       <item row="0" column="0">
-       <layout class="QVBoxLayout" name="verticalLayout_2">
+       <layout class="QVBoxLayout" name="optionsLayout_Vbox">
+        <property name="sizeConstraint">
+         <enum>QLayout::SetMinimumSize</enum>
+        </property>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_12">
+         <layout class="QHBoxLayout" name="analysisGenome_Hbox">
           <item>
-           <widget class="QLabel" name="label_11">
+           <widget class="QLabel" name="analysis_label">
             <property name="text">
              <string>Analysis</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_11"/>
+           <widget class="QLineEdit" name="analysis_lineedit"/>
           </item>
           <item>
-           <widget class="QLabel" name="label_12">
+           <widget class="QLabel" name="genome_label">
             <property name="text">
              <string>Genome</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_12"/>
+           <widget class="QLineEdit" name="genome_lineedit"/>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_11">
+         <layout class="QHBoxLayout" name="adapterStrand_Hbox">
           <item>
-           <widget class="QLabel" name="label_8">
+           <widget class="QLabel" name="adapter_label">
             <property name="text">
              <string>Adapter</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_7"/>
+           <widget class="QLineEdit" name="adapter_lineedit"/>
           </item>
           <item>
-           <widget class="QLabel" name="label_7">
+           <widget class="QLabel" name="strand_label">
             <property name="text">
              <string>Strandedness</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_8"/>
+           <widget class="QLineEdit" name="strand_lineedit"/>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <layout class="QHBoxLayout" name="alignerCore_Hbox">
           <item>
-           <widget class="QLabel" name="label_5">
+           <widget class="QLabel" name="aligner_label">
             <property name="text">
              <string>Aligner</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_5"/>
+           <widget class="QLineEdit" name="aligner_lineedit"/>
           </item>
           <item>
-           <widget class="QLabel" name="label_6">
+           <widget class="QLabel" name="cores_label">
             <property name="text">
              <string>Cores</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_6"/>
+           <widget class="QLineEdit" name="cores_lineedit"/>
           </item>
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_10">
+         <layout class="QHBoxLayout" name="nameSave_Hbox">
           <item>
-           <widget class="QLabel" name="label_9">
+           <widget class="QLabel" name="runName_label">
             <property name="text">
              <string>Run Name</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QLineEdit" name="lineEdit_9"/>
+           <widget class="QLineEdit" name="runName_lineedit"/>
           </item>
           <item>
-           <widget class="QLabel" name="label_10">
+           <widget class="QPushButton" name="save_button">
             <property name="text">
-             <string>TextLabel</string>
+             <string>Save Options</string>
             </property>
            </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="lineEdit_10"/>
           </item>
          </layout>
         </item>

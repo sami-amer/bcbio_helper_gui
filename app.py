@@ -1,5 +1,5 @@
 from PyQt5 import QtWidgets
-from test import Ui_MainWindow
+from helper_gui import Ui_MainWindow
 import sys
 
 class ApplicationWindow(QtWidgets.QMainWindow):
@@ -9,10 +9,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.ui.pushButton.clicked.connect(self.on_push_button)
+        # self.ui.pushButton.clicked.connect(self.on_push_button)
 
-    def on_push_button(self):
-        self.ui.textBrowser.insertPlainText("Meow!")
+    # def on_push_button(self):
+    #     self.ui.textBrowser.insertPlainText("Meow!")
 
 
 
