@@ -12,6 +12,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         # TODO initialize variables here
         self.dataPath = None
         self.gtfPath = None
+        self.fastaPath = None
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -19,6 +20,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         # * Buttons
         self.ui.dataBrowse_button.clicked.connect(self.on_push_dataBrowse)
         self.ui.gtfBrowse_button.clicked.connect(self.on_push_gtfBrowse)
+        self.ui.fastaBrowse_button.clicked.connect(self.on_push_fastaBrowse)
 
     def on_push_dataBrowse(self):
         options = QFileDialog.Options()
@@ -47,7 +49,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         self.gtfPath, _ = QFileDialog.getOpenFileName(
             self,
-            "Select GTF File",
+            "Select GTF File for Transciptome",
             "",
             "Gene Transfer Format (*.gtf)",
             options = options
@@ -61,6 +63,28 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                 "\n"
             )
             self.ui.gtf_lineedit.insert(self.gtfPath)
+
+
+    def on_push_fastaBrowse(self):
+        options = QFileDialog.Options()
+
+        self.fastaPath, _ = QFileDialog.getOpenFileName(
+            self,
+            "Select FASTA File for Transciptome",
+            "",
+            "FASTA format (*.fa)",
+            options = options
+        )
+
+        if self.fastaPath:
+            self.ui.consoleOutput_textbrowser.insertPlainText(
+                "Path to FASTA Set!\n" +
+                "Set to: ..." +
+                self.fastaPath +
+                "\n"
+            )
+            self.ui.fasta_lineedit.insert(self.fastaPath)
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
