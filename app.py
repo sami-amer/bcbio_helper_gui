@@ -4,16 +4,25 @@ from click import option
 from helper_gui import Ui_MainWindow
 import sys
 
+
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(ApplicationWindow, self).__init__()
 
-        # * Input Variables
-        # TODO initialize variables here
+        # * Path Variables
         self.dataPath = None
         self.gtfPath = None
         self.fastaPath = None
         self.outPath = None
+
+        # * Option Variables
+        self.analysis = None
+        self.genome = None
+        self.adapter = None
+        self.strandedness = None
+        self.aligner = None
+        self.cores = None
+        self.run_name = None
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -24,7 +33,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.gtfBrowse_button.clicked.connect(self.on_push_gtfBrowse)
         self.ui.fastaBrowse_button.clicked.connect(self.on_push_fastaBrowse)
         self.ui.outBrowse_button.clicked.connect(self.on_push_outBrowse)
-
+        # *     Options
+        self.ui.save_button.clicked.connect(self.on_push_save)
 
     def on_push_dataBrowse(self):
         options = QFileDialog.Options()
@@ -33,18 +43,15 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         # options |= QFileDialog.DontUseNativeDialog
 
         self.dataPath = QFileDialog.getExistingDirectory(
-            self, # this refers to a subclass of QWidget
+            self,  # this refers to a subclass of QWidget
             "Select RNA Data Folder",
             "",
-            options = options
+            options=options,
         )
-        
+
         if self.dataPath:
             self.ui.consoleOutput_textbrowser.insertPlainText(
-                "Path to RNA Data Set!\n" +
-                "Set to: ..." +
-                self.dataPath +
-                "\n"
+                "Path to RNA Data Set!\n" + "Set to: ..." + self.dataPath + "\n"
             )
             self.ui.data_lineedit.insert(self.dataPath)
 
@@ -56,15 +63,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             "Select GTF File for Transciptome",
             "",
             "Gene Transfer Format (*.gtf)",
-            options = options
+            options=options,
         )
-        
+
         if self.gtfPath:
             self.ui.consoleOutput_textbrowser.insertPlainText(
-                "Path to GTF Set!\n" +
-                "Set to: ..." +
-                self.gtfPath +
-                "\n"
+                "Path to GTF Set!\n" + "Set to: ..." + self.gtfPath + "\n"
             )
             self.ui.gtf_lineedit.insert(self.gtfPath)
 
@@ -76,15 +80,12 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             "Select FASTA File for Transciptome",
             "",
             "FASTA format (*.fa)",
-            options = options
+            options=options,
         )
 
         if self.fastaPath:
             self.ui.consoleOutput_textbrowser.insertPlainText(
-                "Path to FASTA Set!\n" +
-                "Set to: ..." +
-                self.fastaPath +
-                "\n"
+                "Path to FASTA Set!\n" + "Set to: ..." + self.fastaPath + "\n"
             )
             self.ui.fasta_lineedit.insert(self.fastaPath)
 
@@ -93,21 +94,33 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         options |= QFileDialog.ShowDirsOnly
 
         self.outPath = QFileDialog.getExistingDirectory(
-            self,
-            "Select Output Folder",
-            "",
-            options = options
+            self, "Select Output Folder", "", options=options
         )
 
         if self.dataPath:
             self.ui.consoleOutput_textbrowser.insertPlainText(
-                "Output Folder Set!\n" +
-                "Set to: ..." +
-                self.outPath +
-                "\n"
+                "Output Folder Set!\n" + "Set to: ..." + self.outPath + "\n"
             )
 
             self.ui.out_lineedit.insert(self.outPath)
+
+    def on_push_save(self):
+        # TODO add checks for validity
+        if self.analysis != self.ui.analysis_lineedit.text():
+
+            self.analysis = self.ui.analysis_lineedit.text()
+
+            self.ui.consoleOutput_textbrowser.insertPlainText(
+                "Updated Analysis to: " + self.analysis + "\n"
+            )
+
+        if self.genome != self.ui.genome_lineedit.text():
+
+            self.genome = self.ui.genome_lineedit.text()
+
+            self.ui.consoleOutput_textbrowser.insertPlainText(
+                "Updated Genome to: " + self.genome + "\n"
+            )
 
 
 def main():
@@ -115,6 +128,7 @@ def main():
     application = ApplicationWindow()
     application.show()
     sys.exit(app.exec_())
+
 
 if __name__ == "__main__":
     main()
