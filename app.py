@@ -13,14 +13,18 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.dataPath = None
         self.gtfPath = None
         self.fastaPath = None
+        self.outPath = None
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
         # * Buttons
+        # *     Paths
         self.ui.dataBrowse_button.clicked.connect(self.on_push_dataBrowse)
         self.ui.gtfBrowse_button.clicked.connect(self.on_push_gtfBrowse)
         self.ui.fastaBrowse_button.clicked.connect(self.on_push_fastaBrowse)
+        self.ui.outBrowse_button.clicked.connect(self.on_push_outBrowse)
+
 
     def on_push_dataBrowse(self):
         options = QFileDialog.Options()
@@ -64,7 +68,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             )
             self.ui.gtf_lineedit.insert(self.gtfPath)
 
-
     def on_push_fastaBrowse(self):
         options = QFileDialog.Options()
 
@@ -85,6 +88,27 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             )
             self.ui.fasta_lineedit.insert(self.fastaPath)
 
+    def on_push_outBrowse(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.ShowDirsOnly
+
+        self.outPath = QFileDialog.getExistingDirectory(
+            self,
+            "Select Output Folder",
+            "",
+            options = options
+        )
+
+        if self.dataPath:
+            self.ui.consoleOutput_textbrowser.insertPlainText(
+                "Output Folder Set!\n" +
+                "Set to: ..." +
+                self.outPath +
+                "\n"
+            )
+
+            self.ui.out_lineedit.insert(self.outPath)
+
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
@@ -95,7 +119,7 @@ def main():
 if __name__ == "__main__":
     main()
     # ? Order of things to do
-    # TODO Get buttons to browse file system
+    # * DONE Get buttons to browse file system
     # TODO Implement option saving with save button, possibly without
     # TODO Print everything from console to the output box
     # TODO Add function to the run button
