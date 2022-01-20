@@ -162,8 +162,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                 "Updated Core Count to: " + self.run_name + "\n"
             )
 
-    
-
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
