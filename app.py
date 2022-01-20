@@ -105,7 +105,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             self.ui.out_lineedit.insert(self.outPath)
 
     def on_push_save(self):
-        # TODO add checks for validity
+        # TODO add checks for validity of each input, possibly against a set
         if self.analysis != self.ui.analysis_lineedit.text():
 
             self.analysis = self.ui.analysis_lineedit.text()
@@ -121,6 +121,48 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             self.ui.consoleOutput_textbrowser.insertPlainText(
                 "Updated Genome to: " + self.genome + "\n"
             )
+
+        if self.adapter != self.ui.adapter_lineedit.text():
+
+            self.adapter = self.ui.adapter_lineedit.text()
+
+            self.ui.consoleOutput_textbrowser.insertPlainText(
+                "Updated adapter to: " + self.adapter + "\n"
+            )
+
+        if self.strandedness != self.ui.strand_lineedit.text():
+
+            self.strandedness = self.ui.strand_lineedit.text()
+
+            self.ui.consoleOutput_textbrowser.insertPlainText(
+                "Updated Strandedness to: " + self.strandedness + "\n"
+            )
+
+        if self.aligner != self.ui.aligner_lineedit.text():
+
+            self.aligner = self.ui.aligner_lineedit.text()
+
+            self.ui.consoleOutput_textbrowser.insertPlainText(
+                "Updated Aligner to: " + self.aligner + "\n"
+            )
+
+        if self.cores != self.ui.cores_lineedit.text():
+
+            self.cores = self.ui.cores_lineedit.text()
+
+            self.ui.consoleOutput_textbrowser.insertPlainText(
+                "Updated Core Count to:" + self.cores + "\n"
+            )
+
+        if self.run_name != self.ui.runName_lineedit.text():
+
+            self.run_name = self.ui.runName_lineedit.text()
+
+            self.ui.consoleOutput_textbrowser.insertPlainText(
+                "Updated Core Count to: " + self.run_name + "\n"
+            )
+
+    
 
 
 def main():
