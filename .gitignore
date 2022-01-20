@@ -1,2 +1,8 @@
 # Caches
 __pycache__
+
+# Data Files
+
+*.gtf
+
+*.fa
