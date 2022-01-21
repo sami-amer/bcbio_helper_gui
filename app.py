@@ -1,6 +1,5 @@
 from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QFileDialog
-from click import option
 from helper_gui import Ui_MainWindow
 import sys
 
