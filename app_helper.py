@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QFileDialog
-from helper_gui import Ui_MainWindow
+from gui_helper import Ui_MainWindow
 import sys
 
 class Stream(QtCore.QObject):
