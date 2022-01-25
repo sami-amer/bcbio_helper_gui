@@ -1,9 +1,17 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QFileDialog
 from helper_gui import Ui_MainWindow
 import sys
 
-
+class Stream(QtCore.QObject):
+    # * Stream object for console output text
+    newText = QtCore.pyqtSignal(str)
+    def write(self, text):
+        self.newText.emit(str(text))
+    
+    def flush(self):
+        # ? Flush must be implemented, but it can be a no-op
+        pass
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(ApplicationWindow, self).__init__()
@@ -32,8 +40,23 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.gtfBrowse_button.clicked.connect(self.on_push_gtfBrowse)
         self.ui.fastaBrowse_button.clicked.connect(self.on_push_fastaBrowse)
         self.ui.outBrowse_button.clicked.connect(self.on_push_outBrowse)
+        self.ui.runButton_button.clicked.connect(self.on_push_run)
         # *     Options
         self.ui.save_button.clicked.connect(self.on_push_save)
+
+        # * Stream for Console Output
+        sys.stdout = Stream(newText=self.on_update_consoleOutput_textbrowser)
+
+    def on_update_consoleOutput_textbrowser(self, text):
+        cursor = self.ui.consoleOutput_textbrowser.textCursor()
+        cursor.movePosition(QtGui.QTextCursor.End)
+        cursor.insertText(text)
+        self.ui.consoleOutput_textbrowser.setTextCursor(cursor)
+        self.ui.consoleOutput_textbrowser.ensureCursorVisible()
+
+    def on_push_run(self):
+        print('testing console output')
+        # ! This is where we would call BCBIO helper
 
     def on_push_dataBrowse(self):
         options = QFileDialog.Options()
