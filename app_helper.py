@@ -1,6 +1,7 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QFileDialog
 from gui_helper import Ui_MainWindow
+import func_helper
 import sys
 
 class Stream(QtCore.QObject):
@@ -54,9 +55,25 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.consoleOutput_textbrowser.setTextCursor(cursor)
         self.ui.consoleOutput_textbrowser.ensureCursorVisible()
 
+    def store_arguments(self):
+        arguments = {
+            "analysis": self.analysis,
+            "genome": self.genome,
+            "aligner": self.aligner,
+            "adapter": self.adapter,
+            "strandedness": self.strandedness,
+            "fasta_path": self.fastaPath,
+            "gtf_path": self.gtfPath,
+            "outpath": self.outPath,
+            "cores": self.cores,
+            "run_name": self.run_name,
+            "data_path": self.dataPath
+        }
+        return arguments
+    
     def on_push_run(self):
-        print('testing console output')
-        # ! This is where we would call BCBIO helper
+        arguments = self.store_arguments()
+        func_helper.main(arguments)
 
     def on_push_dataBrowse(self):
         options = QFileDialog.Options()
