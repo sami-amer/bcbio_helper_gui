@@ -1,5 +1,6 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QFileDialog
+from PyQt5.QtCore import QObject, QThread, pyqtSignal
 from gui_helper import Ui_MainWindow
 import func_helper
 import sys, subprocess
@@ -14,6 +15,43 @@ class Stream(QtCore.QObject):
     def flush(self):
         # ? Flush must be implemented, but it can be a no-op
         pass
+
+class Worker(QObject):
+    # ------ Code adapted from realpython.com
+    # ------ https://realpython.com/python-pyqt-qthread/#freezing-a-gui-with-long-running-tasks
+    
+    finished = pyqtSignal()
+    progress = pyqtSignal(int)
+
+    def run(self, arguments):
+        # with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+        #     for line in p.stdout:
+        #         print(line, end='') # process line here
+
+        # if p.returncode != 0:
+        #     raise subprocess.CalledProcessError(p.returncode, p.args)
+        
+        for output in self.execute(arguments):
+            print(output, end="")
+            self.progress.emit() # these two lines might be unneeded
+        self.finished.emit()
+
+    # ------
+
+    # ---- Adapted from StackOverflow
+    # ---- https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
+    def execute(self,cmd):
+        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
+        for stdout_line in iter(popen.stdout.readline, ""):
+            # Ui_MainWindow().consoleOutput_textbrowser.insertPlainText(stdout_line)
+            # print(stdout_line)
+            yield stdout_line 
+        popen.stdout.close()
+        return_code = popen.wait()
+        if return_code: # ! Replace this with something that ends the subprocess without hanging
+            raise subprocess.CalledProcessError(return_code, cmd) 
+            # print("FAILED!")
+    # ----
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(ApplicationWindow, self).__init__()
@@ -95,32 +133,44 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         return arguments
     
-    # ---- Adapted from StackOverflow
-    # ---- https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
-    def execute(self,cmd):
-        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
-        for stdout_line in iter(popen.stdout.readline, ""):
-            self.ui.consoleOutput_textbrowser.insertPlainText(stdout_line)
-            yield stdout_line 
-        popen.stdout.close()
-        return_code = popen.wait()
-        if return_code: # ! Replace this with something that ends the subprocess without hanging
-            raise subprocess.CalledProcessError(return_code, cmd) 
-            # print("FAILED!")
-    # ----
 
     def on_push_run(self):
         arguments = self.store_arguments()
+        # TODO: Make this a call to the Worker
         # print("args",arguments)
         # for output in self.execute(arguments):
         #     print(output, end="")
         
-        with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
-            for line in p.stdout:
-                print(line, end='') # process line here
+        # with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+        #     for line in p.stdout:
+        #         print(line, end='') # process line here
 
-        if p.returncode != 0:
-            raise subprocess.CalledProcessError(p.returncode, p.args)
+        # if p.returncode != 0:
+        #     raise subprocess.CalledProcessError(p.returncode, p.args)
+        
+        # ------ Code adapted from realpython.com
+        # ------ https://realpython.com/python-pyqt-qthread/#freezing-a-gui-with-long-running-tasks
+        self.thread = QThread()
+        self.worker = Worker()
+
+        self.worker.moveToThread(self.thread)
+
+        self.thread.started.connect(self.worker.run)
+        self.worker.finished.connect(self.thread.quit)
+        self.worker.finished.connect(self.worker.deleteLater)
+        self.thread.finished.connect(self.thread.deleteLater)
+        self.worker.progress.connect(self.reportProgress)
+
+        self.thread.start()
+
+        self.ui.runButton_button.setEnabled(False)
+        self.thread.finished.connect(
+            lambda: self.ui.runButton_button.setEnabled(True)
+        )
+        # self.thread.finished.connect(
+
+        # )
+        # -------
 
     def on_push_dataBrowse(self):
         options = QFileDialog.Options()
@@ -260,6 +310,6 @@ if __name__ == "__main__":
     main()
     # ? Order of things to do
     # * DONE Get buttons to browse file system
-    # TODO Implement option saving with save button, possibly without
+    # * DONE Implement option saving with save button, possibly without
     # TODO Print everything from console to the output box
-    # TODO Add function to the run button
+    # * DONE Add function to the run button
