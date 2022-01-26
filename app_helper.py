@@ -24,16 +24,18 @@ class Worker(QObject):
     progress = pyqtSignal(int)
 
     def run(self, arguments):
-        # with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
-        #     for line in p.stdout:
-        #         print(line, end='') # process line here
+        with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+            for i, line in enumerate(p.stdout):
+                print(line, end='') # process line here
+                self.progress.emit(i+1)
+            self.finished.emit()
 
-        # if p.returncode != 0:
-        #     raise subprocess.CalledProcessError(p.returncode, p.args)
+        if p.returncode != 0:
+            raise subprocess.CalledProcessError(p.returncode, p.args)
         
-        for output in self.execute(arguments):
-            print(output, end="")
-            # self.progress.emit() # these two lines might be unneeded
+        # for output in self.execute(arguments):
+        #     print(output, end="")
+        #     self.progress.emit() # these two lines might be unneeded
         # self.finished.emit()
 
     # ------
@@ -133,7 +135,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         return arguments
     
-
+    def progress_fn(self, progress):
+        print(str(progress))
+        
     def on_push_run(self):
         arguments = self.store_arguments()
         # TODO: Make this a call to the Worker
@@ -159,7 +163,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
-        # self.worker.progress.connect(self.worker.progress)
+        self.worker.progress.connect(self.progress_fn)
 
         self.thread.start()
 
