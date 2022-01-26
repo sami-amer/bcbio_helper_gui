@@ -33,8 +33,8 @@ class Worker(QObject):
         
         for output in self.execute(arguments):
             print(output, end="")
-            self.progress.emit() # these two lines might be unneeded
-        self.finished.emit()
+            # self.progress.emit() # these two lines might be unneeded
+        # self.finished.emit()
 
     # ------
 
@@ -159,7 +159,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.progress.connect(self.reportProgress)
+        # self.worker.progress.connect(self.worker.progress)
 
         self.thread.start()
 
