@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QFileDialog
-from PyQt5.QtCore import QObject, QThread, pyqtSignal
+from PyQt5.QtCore import QObject, QThreadPool, QRunnable, pyqtSlot, pyqtSignal
 from gui_helper import Ui_MainWindow
 import func_helper
 import sys, subprocess
@@ -16,14 +16,26 @@ class Stream(QtCore.QObject):
         # ? Flush must be implemented, but it can be a no-op
         pass
 
-class Worker(QObject):
-    # ------ Code adapted from realpython.com
-    # ------ https://realpython.com/python-pyqt-qthread/#freezing-a-gui-with-long-running-tasks
+class WorkerSignals(QObject):
     
     finished = pyqtSignal()
+    error = pyqtSignal(tuple)
+    # result = pyqtSignal()
     progress = pyqtSignal(int)
 
-    def run(self, arguments):
+class Worker(QRunnable):
+
+    
+    def __init__(self,*args,**kwargs): # removed fn from here
+        super(Worker, self).__init__()
+        # self.fn = fn
+        self.args = args
+        self.kwargs = kwargs
+        self.signals = WorkerSignals()
+
+    @pyqtSlot()
+    def run(self):
+        arguments = self.args[0]
         with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
             for i, line in enumerate(p.stdout):
                 print(line, end='') # process line here
@@ -38,7 +50,6 @@ class Worker(QObject):
         #     self.progress.emit() # these two lines might be unneeded
         # self.finished.emit()
 
-    # ------
 
     # ---- Adapted from StackOverflow
     # ---- https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
@@ -88,6 +99,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         # * Stream for Console Output
         sys.stdout = Stream(newText=self.on_update_consoleOutput_textbrowser)
+
+        self.threadpool = QThreadPool()
+        print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
 
     def on_update_consoleOutput_textbrowser(self, text):
         cursor = self.ui.consoleOutput_textbrowser.textCursor()
@@ -151,30 +165,15 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         # if p.returncode != 0:
         #     raise subprocess.CalledProcessError(p.returncode, p.args)
+
+        worker = Worker(self.execute_this_fn) # Any other args, kwargs are passed to the run function
+        # worker.signals.result.connect(self.print_output)
+        # worker.signals.finished.connect(self.thread_complete)
+        worker.signals.progress.connect(self.progress_fn)
+        # Execute
+        self.threadpool.start(worker)
         
-        # ------ Code adapted from realpython.com
-        # ------ https://realpython.com/python-pyqt-qthread/#freezing-a-gui-with-long-running-tasks
-        self.thread = QThread()
-        self.worker = Worker()
 
-        self.worker.moveToThread(self.thread)
-
-        self.thread.started.connect(self.worker.run(arguments))
-        self.worker.finished.connect(self.thread.quit)
-        self.worker.finished.connect(self.worker.deleteLater)
-        self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.progress.connect(self.progress_fn)
-
-        self.thread.start()
-
-        self.ui.runButton_button.setEnabled(False)
-        self.thread.finished.connect(
-            lambda: self.ui.runButton_button.setEnabled(True)
-        )
-        # self.thread.finished.connect(
-
-        # )
-        # -------
 
     def on_push_dataBrowse(self):
         options = QFileDialog.Options()
