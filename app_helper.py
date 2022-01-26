@@ -100,20 +100,27 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def execute(self,cmd):
         popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
         for stdout_line in iter(popen.stdout.readline, ""):
+            self.ui.consoleOutput_textbrowser.insertPlainText(stdout_line)
             yield stdout_line 
         popen.stdout.close()
         return_code = popen.wait()
         if return_code: # ! Replace this with something that ends the subprocess without hanging
             raise subprocess.CalledProcessError(return_code, cmd) 
+            # print("FAILED!")
     # ----
 
     def on_push_run(self):
         arguments = self.store_arguments()
-        print("args",arguments)
-        for output in self.execute(arguments):
-            print(output, end="")
+        # print("args",arguments)
+        # for output in self.execute(arguments):
+        #     print(output, end="")
         
+        with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+            for line in p.stdout:
+                print(line, end='') # process line here
 
+        if p.returncode != 0:
+            raise subprocess.CalledProcessError(p.returncode, p.args)
 
     def on_push_dataBrowse(self):
         options = QFileDialog.Options()
@@ -238,7 +245,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             self.run_name = self.ui.runName_lineedit.text()
 
             self.ui.consoleOutput_textbrowser.insertPlainText(
-                "Updated Core Count to: " + self.run_name + "\n"
+                "Updated Run Name to: " + self.run_name + "\n"
             )
 
 
