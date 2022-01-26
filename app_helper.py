@@ -36,20 +36,20 @@ class Worker(QRunnable):
     @pyqtSlot()
     def run(self):
         arguments = self.args[0]
-        with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
-            for i, line in enumerate(p.stdout):
-                print(line, end='') # process line here
-                # Ui_MainWindow().consoleOutput_textbrowser.insertPlainText(line)
-                # self.signals.progress.emit(i+1)
-            self.signals.finished.emit()
+        # with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+        #     for i, line in enumerate(p.stdout):
+        #         print(line, end='') # process line here
+        #         # Ui_MainWindow().consoleOutput_textbrowser.insertPlainText(line)
+        #         # self.signals.progress.emit(i+1)
+        #     self.signals.finished.emit()
 
-        if p.returncode != 0:
-            raise subprocess.CalledProcessError(p.returncode, p.args)
+        # if p.returncode != 0:
+        #     raise subprocess.CalledProcessError(p.returncode, p.args)
         
-        # for output in self.execute(arguments):
-        #     print(output, end="")
-        #     self.progress.emit() # these two lines might be unneeded
-        # self.finished.emit()
+        for output in self.execute(arguments):
+            print(output, end="")
+            # self.progress.emit() # these two lines might be unneeded
+        self.finished.emit()
 
 
     # ---- Adapted from StackOverflow
