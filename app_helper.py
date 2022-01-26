@@ -39,7 +39,7 @@ class Worker(QRunnable):
         with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
             for i, line in enumerate(p.stdout):
                 print(line, end='') # process line here
-                Ui_MainWindow().consoleOutput_textbrowser.insertPlainText(line)
+                # Ui_MainWindow().consoleOutput_textbrowser.insertPlainText(line)
                 self.signals.progress.emit(i+1)
             self.signals.finished.emit()
 
