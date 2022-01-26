@@ -48,8 +48,8 @@ class Worker(QRunnable):
         
         for output in self.execute(arguments):
             print(output, end="")
-            self.progress.emit(output) # these two lines might be unneeded
-        self.finished.emit()
+            self.signals.progress.emit(output) # these two lines might be unneeded
+        self.signals.finished.emit()
 
 
     # ---- Adapted from StackOverflow
