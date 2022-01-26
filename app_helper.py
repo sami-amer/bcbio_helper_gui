@@ -39,8 +39,9 @@ class Worker(QRunnable):
         with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
             for i, line in enumerate(p.stdout):
                 print(line, end='') # process line here
-                self.progress.emit(i+1)
-            self.finished.emit()
+                Ui_MainWindow().consoleOutput_textbrowser.insertPlainText(line)
+                self.signals.progress.emit(i+1)
+            self.signals.finished.emit()
 
         if p.returncode != 0:
             raise subprocess.CalledProcessError(p.returncode, p.args)
