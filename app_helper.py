@@ -21,7 +21,7 @@ class WorkerSignals(QObject):
     finished = pyqtSignal()
     error = pyqtSignal(tuple)
     # result = pyqtSignal()
-    progress = pyqtSignal(int)
+    progress = pyqtSignal(str)
 
 class Worker(QRunnable):
 
@@ -48,7 +48,7 @@ class Worker(QRunnable):
         
         for output in self.execute(arguments):
             print(output, end="")
-            # self.progress.emit() # these two lines might be unneeded
+            self.progress.emit(output) # these two lines might be unneeded
         self.finished.emit()
 
 
