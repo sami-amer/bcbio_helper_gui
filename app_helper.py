@@ -166,7 +166,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         # if p.returncode != 0:
         #     raise subprocess.CalledProcessError(p.returncode, p.args)
 
-        worker = Worker(self.execute_this_fn) # Any other args, kwargs are passed to the run function
+        worker = Worker(arguments) # Any other args, kwargs are passed to the run function
         # worker.signals.result.connect(self.print_output)
         # worker.signals.finished.connect(self.thread_complete)
         worker.signals.progress.connect(self.progress_fn)
