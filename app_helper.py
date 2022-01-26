@@ -2,7 +2,8 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QFileDialog
 from gui_helper import Ui_MainWindow
 import func_helper
-import sys
+import sys, subprocess
+
 
 class Stream(QtCore.QObject):
     # * Stream object for console output text
@@ -56,24 +57,63 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.consoleOutput_textbrowser.ensureCursorVisible()
 
     def store_arguments(self):
-        arguments = {
-            "analysis": self.analysis,
-            "genome": self.genome,
-            "aligner": self.aligner,
-            "adapter": self.adapter,
-            "strandedness": self.strandedness,
-            "fasta_path": self.fastaPath,
-            "gtf_path": self.gtfPath,
-            "outpath": self.outPath,
-            "cores": self.cores,
-            "run_name": self.run_name,
-            "data_path": self.dataPath
-        }
+        # arguments = { # this approach is for the function version
+        #     "analysis": self.analysis,
+        #     "genome": self.genome,
+        #     "aligner": self.aligner,
+        #     "adapter": self.adapter,
+        #     "strandedness": self.strandedness,
+        #     "fasta_path": self.fastaPath,
+        #     "gtf_path": self.gtfPath,
+        #     "outpath": self.outPath,
+        #     "cores": self.cores,
+        #     "run_name": self.run_name,
+        #     "data_path": self.dataPath
+        # }
+
+        arguments = [
+            "python3",
+            "bcbio_helper.py",
+            self.dataPath,
+            self.fastaPath,
+            self.gtfPath,
+            "--analysis",
+            self.analysis if self.analysis else "RNA-seq",
+            "--genome",
+            self.genome if self.genome else "hg38",
+            "--aligner",
+            self.aligner if self.aligner else "hisat2",
+            "--adapter",
+            self.adapter if self.adapter else "polya",
+            "--strandedness",
+            self.strandedness if self.strandedness else "unstranded",
+            "--cores",
+            self.cores if self.cores else "12",
+            self.run_name if self.run_name else "unnamed",
+            self.outPath
+        ]
+
         return arguments
     
+    # ---- Adapted from StackOverflow
+    # ---- https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
+    def execute(self,cmd):
+        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
+        for stdout_line in iter(popen.stdout.readline, ""):
+            yield stdout_line 
+        popen.stdout.close()
+        return_code = popen.wait()
+        if return_code: # ! Replace this with something that ends the subprocess without hanging
+            raise subprocess.CalledProcessError(return_code, cmd) 
+    # ----
+
     def on_push_run(self):
         arguments = self.store_arguments()
-        func_helper.main(arguments)
+        print("args",arguments)
+        for output in self.execute(arguments):
+            print(output, end="")
+        
+
 
     def on_push_dataBrowse(self):
         options = QFileDialog.Options()
