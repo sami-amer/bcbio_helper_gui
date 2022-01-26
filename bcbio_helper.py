@@ -186,14 +186,27 @@ def start_bcbio(outpath, run_name, cores):
     
     
     os.chdir(outpath / str(run_name).split(".")[0] / "work") # changes to the work directory
-    start_bcbio = subprocess.run( # uses subproccess to run bcbio
-        [
+    arguments =[
             "bcbio_nextgen.py",
             f"../config/{str(run_name).split('.')[0]}.yaml",
             "-n",
-            cores,
-        ]
-    )
+            cores]
+
+    # start_bcbio = subprocess.run( # uses subproccess to run bcbio
+    #     [
+    #         "bcbio_nextgen.py",
+    #         f"../config/{str(run_name).split('.')[0]}.yaml",
+    #         "-n",
+    #         cores,
+    #     ]
+    # )
+    with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
+        for i, line in enumerate(p.stdout):
+            print(line, end='') # process line here
+
+    if p.returncode != 0:
+        raise subprocess.CalledProcessError(p.returncode, p.args)
+
     os.chdir("../../../") # changes back to original directory
 
 
