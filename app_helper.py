@@ -130,7 +130,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             "--cores",
             self.cores if self.cores else "12",
             self.run_name if self.run_name else "unnamed",
-            self.outPath
+            self.outPath # ! make sure this is correct
         ]
 
         return arguments
