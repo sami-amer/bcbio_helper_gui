@@ -40,7 +40,7 @@ class Worker(QRunnable):
             for i, line in enumerate(p.stdout):
                 print(line, end='') # process line here
                 # Ui_MainWindow().consoleOutput_textbrowser.insertPlainText(line)
-                self.signals.progress.emit(i+1)
+                # self.signals.progress.emit(i+1)
             self.signals.finished.emit()
 
         if p.returncode != 0:
