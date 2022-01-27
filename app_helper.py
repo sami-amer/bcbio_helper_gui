@@ -36,11 +36,11 @@ class Worker(QRunnable):
     @pyqtSlot()
     def run(self):
         arguments = self.args[0]
-        
-        for output in self.execute(arguments):
-            # print(output, end="")
-            self.signals.progress.emit(output) 
-        self.signals.finished.emit()
+        func_helper.main(arguments)
+        # for output in self.execute(arguments):
+        #     # print(output, end="")
+        #     self.signals.progress.emit(output) 
+        # self.signals.finished.emit()
 
 
     # ---- Adapted from StackOverflow
@@ -101,41 +101,41 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.consoleOutput_textbrowser.ensureCursorVisible()
 
     def store_arguments(self):
-        # arguments = { # this approach is for the function version
-        #     "analysis": self.analysis,
-        #     "genome": self.genome,
-        #     "aligner": self.aligner,
-        #     "adapter": self.adapter,
-        #     "strandedness": self.strandedness,
-        #     "fasta_path": self.fastaPath,
-        #     "gtf_path": self.gtfPath,
-        #     "outpath": self.outPath,
-        #     "cores": self.cores,
-        #     "run_name": self.run_name,
-        #     "data_path": self.dataPath
-        # }
+        arguments = { # this approach is for the function version
+            "analysis": self.analysis,
+            "genome": self.genome,
+            "aligner": self.aligner,
+            "adapter": self.adapter,
+            "strandedness": self.strandedness,
+            "fasta_path": self.fastaPath,
+            "gtf_path": self.gtfPath,
+            "outpath": self.outPath,
+            "cores": self.cores,
+            "run_name": self.run_name,
+            "data_path": self.dataPath
+        }
 
-        arguments = [
-            "python3",
-            "bcbio_helper.py",
-            self.dataPath,
-            self.fastaPath,
-            self.gtfPath,
-            "--analysis",
-            self.analysis if self.analysis else "RNA-seq",
-            "--genome",
-            self.genome if self.genome else "hg38",
-            "--aligner",
-            self.aligner if self.aligner else "hisat2",
-            "--adapter",
-            self.adapter if self.adapter else "polya",
-            "--strandedness",
-            self.strandedness if self.strandedness else "unstranded",
-            "--cores",
-            self.cores if self.cores else "12",
-            self.run_name if self.run_name else "unnamed",
-            self.outPath # ! make sure this is correct
-        ]
+        # arguments = [
+        #     "python3",
+        #     "bcbio_helper.py",
+        #     self.dataPath,
+        #     self.fastaPath,
+        #     self.gtfPath,
+        #     "--analysis",
+        #     self.analysis if self.analysis else "RNA-seq",
+        #     "--genome",
+        #     self.genome if self.genome else "hg38",
+        #     "--aligner",
+        #     self.aligner if self.aligner else "hisat2",
+        #     "--adapter",
+        #     self.adapter if self.adapter else "polya",
+        #     "--strandedness",
+        #     self.strandedness if self.strandedness else "unstranded",
+        #     "--cores",
+        #     self.cores if self.cores else "12",
+        #     self.run_name if self.run_name else "unnamed",
+        #     self.outPath # ! make sure this is correct
+        # ]
 
         return arguments
     
@@ -144,17 +144,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         
     def on_push_run(self):
         arguments = self.store_arguments()
-        # TODO: Make this a call to the Worker
-        # print("args",arguments)
-        # for output in self.execute(arguments):
-        #     print(output, end="")
-        
-        # with subprocess.Popen(arguments, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True) as p:
-        #     for line in p.stdout:
-        #         print(line, end='') # process line here
-
-        # if p.returncode != 0:
-        #     raise subprocess.CalledProcessError(p.returncode, p.args)
 
         worker = Worker(arguments) # Any other args, kwargs are passed to the run function
         # worker.signals.result.connect(self.print_output)
