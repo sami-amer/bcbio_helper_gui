@@ -288,7 +288,7 @@ def main_interactive():
                     },
                 }
             ],
-            "upload": {"dir": str(outpath) + "final/"}
+            "upload": {"dir": str(outpath) + "/final/"}
         }
 
         print(
