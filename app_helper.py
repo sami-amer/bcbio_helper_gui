@@ -287,7 +287,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             self.cores = self.ui.cores_lineedit.text()
 
             self.ui.consoleOutput_textbrowser.insertPlainText(
-                "Updated Core Count to:" + self.cores + "\n"
+                "Updated Core Count to: " + self.cores + "\n"
             )
 
         if self.run_name != self.ui.runName_lineedit.text():
