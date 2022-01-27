@@ -117,7 +117,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.consoleOutput_textbrowser.ensureCursorVisible()
 
     def on_push_kill(self):
-        self.process.terminate()
+        # self.process.terminate()
         # self.process.waitForFinished()
         self.process.kill()
 
