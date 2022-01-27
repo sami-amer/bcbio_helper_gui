@@ -211,6 +211,7 @@ def start_bcbio(outpath, run_name, cores):
     # )
     for output in execute(arguments):
         print(output, end="")
+        print("-"*20)
 
 
     os.chdir("../../../") # changes back to original directory
