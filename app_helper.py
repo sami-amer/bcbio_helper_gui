@@ -76,13 +76,13 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.outPath = None
 
         # * Option Variables
-        self.analysis = None
-        self.genome = None
-        self.adapter = None
-        self.strandedness = None
-        self.aligner = None
-        self.cores = None
-        self.run_name = None
+        self.analysis = ""
+        self.genome = ""
+        self.adapter = ""
+        self.strandedness = ""
+        self.aligner = ""
+        self.cores = ""
+        self.run_name = ""
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
