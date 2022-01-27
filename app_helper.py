@@ -116,41 +116,41 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.consoleOutput_textbrowser.ensureCursorVisible()
 
     def store_arguments(self):
-        arguments = { # this approach is for the function version
-            "analysis": self.analysis,
-            "genome": self.genome,
-            "aligner": self.aligner,
-            "adapter": self.adapter,
-            "strandedness": self.strandedness,
-            "fasta_path": self.fastaPath,
-            "gtf_path": self.gtfPath,
-            "outpath": self.outPath,
-            "cores": self.cores,
-            "run_name": self.run_name,
-            "data_path": self.dataPath
-        }
+        # arguments = { # this approach is for the function version
+        #     "analysis": self.analysis,
+        #     "genome": self.genome,
+        #     "aligner": self.aligner,
+        #     "adapter": self.adapter,
+        #     "strandedness": self.strandedness,
+        #     "fasta_path": self.fastaPath,
+        #     "gtf_path": self.gtfPath,
+        #     "outpath": self.outPath,
+        #     "cores": self.cores,
+        #     "run_name": self.run_name,
+        #     "data_path": self.dataPath
+        # }
 
-        # arguments = [
-        #     "python3",
-        #     "bcbio_helper.py",
-        #     self.dataPath,
-        #     self.fastaPath,
-        #     self.gtfPath,
-        #     "--analysis",
-        #     self.analysis if self.analysis else "RNA-seq",
-        #     "--genome",
-        #     self.genome if self.genome else "hg38",
-        #     "--aligner",
-        #     self.aligner if self.aligner else "hisat2",
-        #     "--adapter",
-        #     self.adapter if self.adapter else "polya",
-        #     "--strandedness",
-        #     self.strandedness if self.strandedness else "unstranded",
-        #     "--cores",
-        #     self.cores if self.cores else "12",
-        #     self.run_name if self.run_name else "unnamed",
-        #     self.outPath # ! make sure this is correct
-        # ]
+        arguments = [
+            "python3",
+            "bcbio_helper.py",
+            self.dataPath,
+            self.fastaPath,
+            self.gtfPath,
+            "--analysis",
+            self.analysis if self.analysis else "RNA-seq",
+            "--genome",
+            self.genome if self.genome else "hg38",
+            "--aligner",
+            self.aligner if self.aligner else "hisat2",
+            "--adapter",
+            self.adapter if self.adapter else "polya",
+            "--strandedness",
+            self.strandedness if self.strandedness else "unstranded",
+            "--cores",
+            self.cores if self.cores else "12",
+            self.run_name if self.run_name else "unnamed",
+            self.outPath # ! make sure this is correct
+        ]
 
         return arguments
     
