@@ -1,19 +1,17 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'helper_gui.ui'
+# Form implementation generated from reading ui file 'ui/helper_gui.ui'
 #
-# Created by: PyQt5 UI code generator 5.12.3
+# Created by: PyQt5 UI code generator 5.9.2
 #
 # WARNING! All changes made in this file will be lost!
 
-
 from PyQt5 import QtCore, QtGui, QtWidgets
-
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600) # set to manually start up at this size
+        MainWindow.resize(862, 581)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setEnabled(True)
         self.centralwidget.setObjectName("centralwidget")
@@ -38,9 +36,21 @@ class Ui_MainWindow(object):
         self.consoleOutput_textbrowser.setMaximumSize(QtCore.QSize(2160, 1400))
         self.consoleOutput_textbrowser.setObjectName("consoleOutput_textbrowser")
         self.bottomLayout_Hbox.addWidget(self.consoleOutput_textbrowser)
+        self.button_Vbox = QtWidgets.QVBoxLayout()
+        self.button_Vbox.setSpacing(0)
+        self.button_Vbox.setObjectName("button_Vbox")
+        spacerItem = QtWidgets.QSpacerItem(20, 14, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.button_Vbox.addItem(spacerItem)
+        self.kill_button = QtWidgets.QPushButton(self.centralwidget)
+        self.kill_button.setEnabled(False)
+        self.kill_button.setObjectName("kill_button")
+        self.button_Vbox.addWidget(self.kill_button)
         self.runButton_button = QtWidgets.QPushButton(self.centralwidget)
         self.runButton_button.setObjectName("runButton_button")
-        self.bottomLayout_Hbox.addWidget(self.runButton_button)
+        self.button_Vbox.addWidget(self.runButton_button)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 20, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.button_Vbox.addItem(spacerItem1)
+        self.bottomLayout_Hbox.addLayout(self.button_Vbox)
         self.mainLayout_grid.addLayout(self.bottomLayout_Hbox, 1, 0, 1, 2)
         self.pathsLayout_Vbox = QtWidgets.QVBoxLayout()
         self.pathsLayout_Vbox.setSizeConstraint(QtWidgets.QLayout.SetMinimumSize)
@@ -170,6 +180,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "bcbio helper"))
+        self.kill_button.setText(_translate("MainWindow", "Kill"))
         self.runButton_button.setText(_translate("MainWindow", "Run BCBIO"))
         self.data_label.setText(_translate("MainWindow", "Data"))
         self.dataBrowse_button.setText(_translate("MainWindow", "Browse"))
@@ -197,3 +208,4 @@ if __name__ == "__main__":
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+

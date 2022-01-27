@@ -59,6 +59,16 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(ApplicationWindow, self).__init__()
 
+        # * Process and Signals
+        self.process = QtCore.QProcess(self)
+        self.process.readyRead.connect(self.dataReady)
+        self.process.started.connect(lambda: self.ui.runButton_button.setEnabled(False))
+        self.process.started.connect(lambda: self.ui.kill_button.setEnabled(True))
+        self.process.finished.connect(lambda: self.ui.runButton_button.setEnabled(True))
+        self.process.finished.connect(lambda: self.ui.kill_button.setEnabled(False))
+        self.process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
+
+
         # * Path Variables
         self.dataPath = None
         self.gtfPath = None
@@ -83,18 +93,16 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.gtfBrowse_button.clicked.connect(self.on_push_gtfBrowse)
         self.ui.fastaBrowse_button.clicked.connect(self.on_push_fastaBrowse)
         self.ui.outBrowse_button.clicked.connect(self.on_push_outBrowse)
-        self.ui.runButton_button.clicked.connect(self.on_push_run)
         # *     Options
         self.ui.save_button.clicked.connect(self.on_push_save)
+        # *     Run and Kill
+        self.ui.runButton_button.clicked.connect(self.on_push_run)
+        self.ui.kill_button.clicked.connect(self.on_push_kill)
 
         # * Stream for Console Output
         sys.stdout = Stream(newText=self.on_update_consoleOutput_textbrowser)
 
-        self.process = QtCore.QProcess(self)
-        self.process.readyRead.connect(self.dataReady)
-        self.process.started.connect(lambda: self.ui.runButton_button.setEnabled(False))
-        self.process.finished.connect(lambda: self.ui.runButton_button.setEnabled(True))
-        self.process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
+
 
     def dataReady(self):
         cursor = self.ui.consoleOutput_textbrowser.textCursor()
@@ -104,6 +112,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.consoleOutput_textbrowser.setTextCursor(cursor)
         self.ui.consoleOutput_textbrowser.ensureCursorVisible()
 
+    def on_push_kill(self):
+        self.process.terminate()
+        self.process.waitForFinished()
+        self.process.kill()
 
     def on_update_consoleOutput_textbrowser(self, text):
         cursor = self.ui.consoleOutput_textbrowser.textCursor()
