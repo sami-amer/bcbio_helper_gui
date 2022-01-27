@@ -23,37 +23,38 @@ class WorkerSignals(QObject):
     # result = pyqtSignal()
     progress = pyqtSignal(str)
 
-class Worker(QRunnable):
+# class Worker(QRunnable):
 
-    def __init__(self,*args,**kwargs): # removed fn from here
-        super(Worker, self).__init__()
-        # self.fn = fn
-        self.args = args
-        self.kwargs = kwargs
-        self.signals = WorkerSignals()
+#     def __init__(self,*args,**kwargs): # removed fn from here
+#         super(Worker, self).__init__()
+#         # self.fn = fn
+#         self.args = args
+#         self.kwargs = kwargs
+#         self.signals = WorkerSignals()
 
-    @pyqtSlot()
-    def run(self):
-        arguments = self.args[0]
-        func_helper.main(arguments)
+#     @pyqtSlot()
+#     def run(self):
+#         arguments = self.args[0]
+#         func_helper.main(arguments)
 
-        # for output in self.execute(arguments):
-        #     print(output, end="")
-        #     self.signals.progress.emit(output) 
-        # self.signals.finished.emit()
+#         # for output in self.execute(arguments):
+#         #     print(output, end="")
+#         #     self.signals.progress.emit(output) 
+#         # self.signals.finished.emit()
 
-    # ---- Adapted from StackOverflow
-    # ---- https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
-    def execute(self,cmd):
-        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
-        for stdout_line in iter(popen.stdout.readline, ""):
-            yield stdout_line 
-        popen.stdout.close()
-        return_code = popen.wait()
-        if return_code: # ! Replace this with something that ends the subprocess without hanging
-            raise subprocess.CalledProcessError(return_code, cmd) 
-            # print("FAILED!")
-    # ----
+#     # ---- Adapted from StackOverflow
+#     # ---- https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
+#     def execute(self,cmd):
+#         popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
+#         for stdout_line in iter(popen.stdout.readline, ""):
+#             yield stdout_line 
+#         popen.stdout.close()
+#         return_code = popen.wait()
+#         if return_code: # ! Replace this with something that ends the subprocess without hanging
+#             raise subprocess.CalledProcessError(return_code, cmd) 
+#             # print("FAILED!")
+#     # ----
+
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(ApplicationWindow, self).__init__()
@@ -82,31 +83,27 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.gtfBrowse_button.clicked.connect(self.on_push_gtfBrowse)
         self.ui.fastaBrowse_button.clicked.connect(self.on_push_fastaBrowse)
         self.ui.outBrowse_button.clicked.connect(self.on_push_outBrowse)
-        # self.ui.runButton_button.clicked.connect(self.on_push_run)
+        self.ui.runButton_button.clicked.connect(self.on_push_run)
         # *     Options
         self.ui.save_button.clicked.connect(self.on_push_save)
 
         # * Stream for Console Output
         sys.stdout = Stream(newText=self.on_update_consoleOutput_textbrowser)
 
-        self.threadpool = QThreadPool()
-        print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
-        self.ui.runButton_button.clicked.connect(self.callProgram)
         self.process = QtCore.QProcess(self)
         self.process.readyRead.connect(self.dataReady)
         self.process.started.connect(lambda: self.ui.runButton_button.setEnabled(False))
         self.process.finished.connect(lambda: self.ui.runButton_button.setEnabled(True))
+        self.process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
 
     def dataReady(self):
         cursor = self.ui.consoleOutput_textbrowser.textCursor()
         cursor.movePosition(cursor.End)
-        cursor.insertText(str(self.process.readAll()))
+        Qbyte_stdout = (self.process.readAll())
+        cursor.insertText(Qbyte_stdout.data().decode())
+        self.ui.consoleOutput_textbrowser.setTextCursor(cursor)
         self.ui.consoleOutput_textbrowser.ensureCursorVisible()
 
-
-    def callProgram(self):
-        arguments = self.store_arguments()
-        self.process.start(arguments[0],arguments[1:])
 
     def on_update_consoleOutput_textbrowser(self, text):
         cursor = self.ui.consoleOutput_textbrowser.textCursor()
@@ -159,13 +156,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         
     def on_push_run(self):
         arguments = self.store_arguments()
-
-        worker = Worker(arguments) # Any other args, kwargs are passed to the run function
-        # worker.signals.result.connect(self.print_output)
-        # worker.signals.finished.connect(self.thread_complete)
-        worker.signals.progress.connect(self.progress_fn)
-        # Execute
-        self.threadpool.start(worker)
+        self.process.start(arguments[0],arguments[1:])
         
 
 
