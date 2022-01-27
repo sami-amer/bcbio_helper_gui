@@ -169,15 +169,6 @@ def create_run_yaml(path_to_data, path_to_yaml, path_to_csv, outpath):
     
     os.chdir("..") # changes the directory back to avoid any issues
 
-def execute(cmd):
-    popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
-    for stdout_line in iter(popen.stdout.readline, ""):
-        yield stdout_line 
-    popen.stdout.close()
-    return_code = popen.wait()
-    if return_code: # ! Replace this with something that ends the subprocess without hanging
-        raise subprocess.CalledProcessError(return_code, cmd) 
-        # print("FAILED!")
 
 def start_bcbio(outpath, run_name, cores):
     """
@@ -201,17 +192,14 @@ def start_bcbio(outpath, run_name, cores):
             "-n",
             cores]
 
-    # start_bcbio = subprocess.run( # uses subproccess to run bcbio
-    #     [
-    #         "bcbio_nextgen.py",
-    #         f"../config/{str(run_name).split('.')[0]}.yaml",
-    #         "-n",
-    #         cores,
-    #     ]
-    # )
-    for output in execute(arguments):
-        print(output, end="")
-        print("-"*20)
+    start_bcbio = subprocess.run( # uses subproccess to run bcbio
+        [
+            "bcbio_nextgen.py",
+            f"../config/{str(run_name).split('.')[0]}.yaml",
+            "-n",
+            cores,
+        ]
+    )
 
 
     os.chdir("../../../") # changes back to original directory
