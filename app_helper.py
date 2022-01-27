@@ -25,7 +25,6 @@ class WorkerSignals(QObject):
 
 class Worker(QRunnable):
 
-    
     def __init__(self,*args,**kwargs): # removed fn from here
         super(Worker, self).__init__()
         # self.fn = fn
@@ -37,11 +36,11 @@ class Worker(QRunnable):
     def run(self):
         arguments = self.args[0]
         func_helper.main(arguments)
+
         # for output in self.execute(arguments):
-        #     # print(output, end="")
+        #     print(output, end="")
         #     self.signals.progress.emit(output) 
         # self.signals.finished.emit()
-
 
     # ---- Adapted from StackOverflow
     # ---- https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
@@ -83,7 +82,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.gtfBrowse_button.clicked.connect(self.on_push_gtfBrowse)
         self.ui.fastaBrowse_button.clicked.connect(self.on_push_fastaBrowse)
         self.ui.outBrowse_button.clicked.connect(self.on_push_outBrowse)
-        self.ui.runButton_button.clicked.connect(self.on_push_run)
+        # self.ui.runButton_button.clicked.connect(self.on_push_run)
         # *     Options
         self.ui.save_button.clicked.connect(self.on_push_save)
 
@@ -92,6 +91,22 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         self.threadpool = QThreadPool()
         print("Multithreading with maximum %d threads" % self.threadpool.maxThreadCount())
+        self.ui.runButton_button.clicked.connect(self.callProgram)
+        self.process = QtCore.QProcess(self)
+        self.process.readyRead.connect(self.dataReady)
+        self.process.started.connect(lambda: self.ui.runButton_button.setEnabled(False))
+        self.process.finished.connect(lambda: self.ui.runButton_button.setEnabled(True))
+
+    def dataReady(self):
+        cursor = self.ui.consoleOutput_textbrowser.textCursor()
+        cursor.movePosition(cursor.End)
+        cursor.insertText(str(self.process.readAll()))
+        self.ui.consoleOutput_textbrowser.ensureCursorVisible()
+
+
+    def callProgram(self):
+        arguments = self.store_arguments()
+        self.process.start(arguments[0],arguments[1:])
 
     def on_update_consoleOutput_textbrowser(self, text):
         cursor = self.ui.consoleOutput_textbrowser.textCursor()
