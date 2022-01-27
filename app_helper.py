@@ -59,15 +59,19 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(ApplicationWindow, self).__init__()
 
+        self.setWindowFlags(self.windowFlags() | QtCore.Qt.CustomizeWindowHint)
+
         # * Process and Signals
         self.process = QtCore.QProcess(self)
         self.process.readyRead.connect(self.dataReady)
         self.process.started.connect(lambda: self.ui.runButton_button.setEnabled(False))
         self.process.started.connect(lambda: self.ui.kill_button.setEnabled(True))
+        
         self.process.finished.connect(lambda: self.ui.runButton_button.setEnabled(True))
         self.process.finished.connect(lambda: self.ui.kill_button.setEnabled(False))
         self.process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
 
+        self.destroyed.connect(self.on_push_kill)
 
         # * Path Variables
         self.dataPath = None
