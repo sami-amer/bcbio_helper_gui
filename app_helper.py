@@ -114,7 +114,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
     def on_push_kill(self):
         self.process.terminate()
-        self.process.waitForFinished()
+        # self.process.waitForFinished()
         self.process.kill()
 
     def on_update_consoleOutput_textbrowser(self, text):
