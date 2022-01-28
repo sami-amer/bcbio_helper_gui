@@ -68,7 +68,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.process.started.connect(lambda: self.ui.kill_button.setEnabled(True))
         
         self.process.finished.connect(lambda: self.ui.runButton_button.setEnabled(True))
-        self.process.finished.connect(lambda: self.ui.kill_button.setEnabled(False))
+        # self.process.finished.connect(lambda: self.ui.kill_button.setEnabled(False))
         self.process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
 
         self.destroyed.connect(self.on_push_kill)
@@ -117,10 +117,10 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.consoleOutput_textbrowser.ensureCursorVisible()
 
     def on_push_kill(self):
-        # self.process.terminate()
-        # self.process.waitForFinished()
-        # self.process.kill()
-        self.process.start("^C")
+        self.process.terminate()
+        self.process.waitForFinished()
+        self.process.kill()
+
 
     def on_update_consoleOutput_textbrowser(self, text):
         cursor = self.ui.consoleOutput_textbrowser.textCursor()
