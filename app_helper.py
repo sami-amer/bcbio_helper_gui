@@ -126,7 +126,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             try:
                 child.terminate()
             except psutil.NoSuchProcess:
-                print("All Proccesses Killed!")
+                print("All Sub-processes KILLED!")
                 break
         print('KILLED!')
 
