@@ -119,7 +119,11 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def on_push_kill(self):
         # self.process.kill()
         p = psutil.Process(self.process.pid())
+        children = p.children(recursive=True)
         p.terminate()
+        for child in children:
+            print("Killing Child " + str(child.pid))
+            child.terminate()
         print('KILLED!')
 
 
