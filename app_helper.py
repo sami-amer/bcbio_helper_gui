@@ -118,7 +118,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     @pyqtSlot()
     def on_push_kill(self):
         # self.process.kill()
-        p = psutil.Process(self.process.pid)
+        p = psutil.Process(self.process.pid())
         p.terminate()
         print('KILLED!')
 
