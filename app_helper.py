@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import QObject, QThreadPool, QRunnable, pyqtSlot, pyqtSignal
 from gui_helper import Ui_MainWindow
-import sys, subprocess
+import sys, subprocess, psutil
 
 
 class Stream(QtCore.QObject):
@@ -115,8 +115,11 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.ui.consoleOutput_textbrowser.setTextCursor(cursor)
         self.ui.consoleOutput_textbrowser.ensureCursorVisible()
 
+    @pyqtSlot()
     def on_push_kill(self):
-        self.process.kill()
+        # self.process.kill()
+        p = psutil.Process(self.process.pid)
+        p.terminate()
         print('KILLED!')
 
 
@@ -168,7 +171,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     
     def progress_fn(self, progress):
         print(str(progress))
-        
+    
+    @pyqtSlot()
     def on_push_run(self):
         arguments = self.store_arguments()
         self.process.start(arguments[0],arguments[1:])
