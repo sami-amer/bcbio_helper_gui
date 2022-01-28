@@ -123,7 +123,11 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         p.terminate()
         for child in children:
             print("Killing Child " + str(child.pid))
-            child.terminate()
+            try:
+                child.terminate()
+            except psutil.NoSuchProcess:
+                print("All Proccesses Killed!")
+                break
         print('KILLED!')
 
 
