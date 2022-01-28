@@ -120,7 +120,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         # self.process.terminate()
         # self.process.waitForFinished()
         # self.process.kill()
-        self.process.start(["^C"])
+        self.process.start("^C")
 
     def on_update_consoleOutput_textbrowser(self, text):
         cursor = self.ui.consoleOutput_textbrowser.textCursor()
