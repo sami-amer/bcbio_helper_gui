@@ -105,7 +105,7 @@ def get_args(args):
                 },
             }
         ],
-        "upload": {"dir": args["<outpath>"] + "final/"}
+        "upload": {"dir": args["<outpath>"] + "/final/"}
     }
     return args # returns a dictionary that is ready to be dumped
 

@@ -2,7 +2,6 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QFileDialog
 from PyQt5.QtCore import QObject, QThreadPool, QRunnable, pyqtSlot, pyqtSignal
 from gui_helper import Ui_MainWindow
-import func_helper
 import sys, subprocess
 
 
