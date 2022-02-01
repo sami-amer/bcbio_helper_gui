@@ -26,7 +26,6 @@ class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(ApplicationWindow, self).__init__()
 
-        self.setWindowFlags(self.windowFlags() | QtCore.Qt.CustomizeWindowHint)
 
         # * Process and Signals
         self.process = QtCore.QProcess(self)
@@ -35,10 +34,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         self.process.started.connect(lambda: self.ui.kill_button.setEnabled(True))
         
         self.process.finished.connect(lambda: self.ui.runButton_button.setEnabled(True))
-        # self.process.finished.connect(lambda: self.ui.kill_button.setEnabled(False))
+        self.process.finished.connect(lambda: self.ui.kill_button.setEnabled(False))
         self.process.setProcessChannelMode(QtCore.QProcess.MergedChannels)
 
-        self.destroyed.connect(self.on_push_kill)
 
         # * Path Variables
         self.dataPath = None
@@ -73,7 +71,9 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         # * Stream for Console Output
         sys.stdout = Stream(newText=self.on_update_consoleOutput_textbrowser)
 
-
+    def closeEvent(self, event):
+        self.on_push_kill()
+        event.accept()
 
     def dataReady(self):
         cursor = self.ui.consoleOutput_textbrowser.textCursor()
