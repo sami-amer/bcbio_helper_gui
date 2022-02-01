@@ -22,38 +22,6 @@ class WorkerSignals(QObject):
     # result = pyqtSignal()
     progress = pyqtSignal(str)
 
-# class Worker(QRunnable):
-
-#     def __init__(self,*args,**kwargs): # removed fn from here
-#         super(Worker, self).__init__()
-#         # self.fn = fn
-#         self.args = args
-#         self.kwargs = kwargs
-#         self.signals = WorkerSignals()
-
-#     @pyqtSlot()
-#     def run(self):
-#         arguments = self.args[0]
-#         func_helper.main(arguments)
-
-#         # for output in self.execute(arguments):
-#         #     print(output, end="")
-#         #     self.signals.progress.emit(output) 
-#         # self.signals.finished.emit()
-
-#     # ---- Adapted from StackOverflow
-#     # ---- https://stackoverflow.com/questions/4417546/constantly-print-subprocess-output-while-process-is-running
-#     def execute(self,cmd):
-#         popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
-#         for stdout_line in iter(popen.stdout.readline, ""):
-#             yield stdout_line 
-#         popen.stdout.close()
-#         return_code = popen.wait()
-#         if return_code: # ! Replace this with something that ends the subprocess without hanging
-#             raise subprocess.CalledProcessError(return_code, cmd) 
-#             # print("FAILED!")
-#     # ----
-
 class ApplicationWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super(ApplicationWindow, self).__init__()
