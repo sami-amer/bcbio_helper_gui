@@ -76,7 +76,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             if self.ui.gtf_checkbox.isChecked():
                 args.append("--gtf")
             if self.ui.gtf_chr_checkbox.isChecked():
-                args.append("--gtf_char")
+                args.append("--gtf_chr")
             if self.ui.cdna_checkbox.isChecked():
                 args.append('--cdna')
             
