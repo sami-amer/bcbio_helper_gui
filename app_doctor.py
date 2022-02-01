@@ -59,12 +59,40 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         # * Stream to capture print statements
         sys.stdout = Stream(newText=self.on_update_consoleOutput_textbrowser)
 
+    def get_args(self, option):
+        if option == 'run':
+            args = [
+                "python3",
+                "bcbio_doctor.py",
+                self.genome_path if self.genome_path else ''
+            ]
+        elif option == 'download':
+            args = [
+                "python3",
+                "bcbio_doctor.py",
+                "-d"
+            ]
+
+            if self.ui.gtf_checkbox.isChecked():
+                args.append("--gtf")
+            if self.ui.gtf_chr_checkbox.isChecked():
+                args.append("--gtf_char")
+            if self.ui.cdna_checkbox.isChecked():
+                args.append('--cdna')
+            
+            args.append(self.out_path)
+    
     def on_push_download(self):
-        pass
+        if self.out_path == '':
+            print ("Please set an output path first!")
+        else:
+            args = self.get_args('download')
+            self.process_download.start(args[0],args[1:])
 
 
     def on_push_run(self):
-        pass
+        args = self.get_args('run')
+        self.process_run.start(args[0],args[1:])
 
     def dataReady(self):
         cursor = self.ui.consoleOutput_textbrowser.textCursor()
