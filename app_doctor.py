@@ -18,7 +18,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         # * Process and Signals for Run
         self.process_run = QtCore.QProcess(self)
-        self.process_run.readyRead.connect(self.dataReady)
+        self.process_run.readyRead.connect(self.dataReady_run)
        
         self.process_run.started.connect(lambda: self.ui.run_button.setEnabled(False))
         self.process_run.started.connect(lambda: self.ui.download_button.setEnabled(False))
@@ -30,7 +30,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
 
         # * Process and Signals for Download
         self.process_download = QtCore.QProcess(self)
-        self.process_download.readyRead.connect(self.dataReady)
+        self.process_download.readyRead.connect(self.dataReady_download)
        
         self.process_download.started.connect(lambda: self.ui.run_button.setEnabled(False))
         self.process_download.started.connect(lambda: self.ui.download_button.setEnabled(False))
@@ -96,13 +96,22 @@ class ApplicationWindow(QtWidgets.QMainWindow):
         args = self.get_args('run')
         self.process_run.start(args[0],args[1:])
 
-    def dataReady(self):
+    def dataReady_run(self):
         cursor = self.ui.consoleOutput_textbrowser.textCursor()
         cursor.movePosition(cursor.End)
-        Qbyte_stdout = (self.process.readAll())
+        Qbyte_stdout = (self.process_run.readAll())
         cursor.insertText(Qbyte_stdout.data().decode())
         self.ui.consoleOutput_textbrowser.setTextCursor(cursor)
         self.ui.consoleOutput_textbrowser.ensureCursorVisible()
+
+    def dataReady_download(self):
+        cursor = self.ui.consoleOutput_textbrowser.textCursor()
+        cursor.movePosition(cursor.End)
+        Qbyte_stdout = (self.process_download.readAll())
+        cursor.insertText(Qbyte_stdout.data().decode())
+        self.ui.consoleOutput_textbrowser.setTextCursor(cursor)
+        self.ui.consoleOutput_textbrowser.ensureCursorVisible()
+
 
     def on_update_consoleOutput_textbrowser(self, text):
         cursor = self.ui.consoleOutput_textbrowser.textCursor()
