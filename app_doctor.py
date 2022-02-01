@@ -127,7 +127,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             self.ui.consoleOutput_textbrowser.insertPlainText(
                 "Genome Path Set!\n" + "Set to: ..." + self.genome_path + "\n"
             )
-            self.ui.data_lineedit.insert(self.genome_path)
+            self.ui.genome_lineedit.insert(self.genome_path)
 
     def on_push_outBrowse(self):
         options = QFileDialog.Options()
@@ -146,7 +146,7 @@ class ApplicationWindow(QtWidgets.QMainWindow):
             self.ui.consoleOutput_textbrowser.insertPlainText(
                 "Download Path Set!\n" + "Set to: ..." + self.out_path + "\n"
             )
-            self.ui.data_lineedit.insert(self.out_path)
+            self.ui.out_lineedit.insert(self.out_path)
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
