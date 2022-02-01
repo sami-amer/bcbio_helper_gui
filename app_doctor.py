@@ -81,6 +81,8 @@ class ApplicationWindow(QtWidgets.QMainWindow):
                 args.append('--cdna')
             
             args.append(self.out_path)
+
+        return args
     
     def on_push_download(self):
         if self.out_path == '':
